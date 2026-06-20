@@ -15,7 +15,7 @@ const Navbar = () => {
 
                     {/* Logo Text */}
                     <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
-                        DriveFleet 
+                        DriveFleet
                     </span>
                 </div>
 
@@ -75,27 +75,29 @@ const Navbar = () => {
                 <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg md:hidden transition-all duration-200 ease-in-out">
                     <div className="px-4 pt-2 pb-6 space-y-3 flex flex-col">
                         <li>
-                        <Link href={"/"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Home</Link>
-                    </li>
-                    <li>
-                        <Link href={"/explore-cars"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Explore Cars</Link>
-                    </li>
-                    <li>
-                        <Link href={"/add-car"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Add Car</Link>
-                    </li>
-                    <li>
-                        <Link href={"/my-bookings"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">My Bookings
-                        </Link>
-                    </li>
+                            <Link href={"/"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Home</Link>
+                        </li>
+                        <li>
+                            <Link href={"/explore-cars"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Explore Cars</Link>
+                        </li>
+                        <li>
+                            <Link href={"/add-car"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Add Car</Link>
+                        </li>
+                        <li>
+                            <Link href={"/my-bookings"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">My Bookings
+                            </Link>
+                        </li>
 
                         {/* Action buttons inside mobile drawer (For screen sizes narrower than 'sm') */}
                         <div className="pt-4 border-t border-gray-100 sm:hidden flex flex-col space-y-2">
                             <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">
-                            Login
-                        </Link>
-                            <button className="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-full shadow-md">
-                                Join Free
-                            </button>
+                                Login
+                            </Link  >
+                            <Link href="/register" className="w-full cursor-pointer ">
+                                <button className="w-full bg-green-600  text-white font-semibold py-2.5 rounded-full shadow-md hover:bg-blue-700 transition-colors">
+                                    Join Free
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
