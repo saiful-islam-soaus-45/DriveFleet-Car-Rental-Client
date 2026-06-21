@@ -89,12 +89,18 @@ const Navbar = () => {
                         </li>
 
                         {/* Action buttons inside mobile drawer (For screen sizes narrower than 'sm') */}
-                        <div className="pt-4 border-t border-gray-100 sm:hidden flex flex-col space-y-2">
-                            <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">
+                        <div className="pt-4 border-t border-[#e8e4da] sm:hidden flex flex-col space-y-3">
+                            {/* Login Link: টেক্সট সেন্টার করে থিম কালার দেওয়া হয়েছে */}
+                            <Link
+                                href="/login"
+                                className="text-[#415e51] hover:text-[#1c2e24] font-semibold transition-colors text-sm text-center py-2"
+                            >
                                 Login
-                            </Link  >
-                            <Link href="/register" className="w-full cursor-pointer ">
-                                <button className="w-full bg-green-600  text-white font-semibold py-2.5 rounded-full shadow-md hover:bg-blue-700 transition-colors">
+                            </Link>
+
+                            {/* Register Link & Button: Mossforge সিগনেচার লাইম কালার (#c1f05d) দেওয়া হলো যেন ব্যানার বাটনের সাথে মিলে যায় */}
+                            <Link href="/register" className="w-full block">
+                                <button className="w-full bg-[#c1f05d] hover:bg-[#b0df4c] text-[#1c2e24] font-bold py-2.5 rounded-full shadow-md transition-all duration-300 text-sm">
                                     Join Free
                                 </button>
                             </Link>
