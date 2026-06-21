@@ -40,13 +40,13 @@ export default function AddCarForm() {
     };
 
     return (
-        <div className="min-h-screen bg-green-100 py-12 px-4 sm:px-6 flex flex-col justify-center items-center font-sans pt-32">
+        <div className="min-h-screen bg-green-50 py-12 px-4 sm:px-6 flex flex-col justify-center items-center font-sans pt-32">
             
             <h1 className="text-4xl sm:text-4xl lg:text-5xl font-black text-[#1c2e24] mb-8 tracking-tight uppercase text-center">
                 Add a Car Listing.
             </h1>
             
-            <div className="w-full max-w-2xl bg-white p-8 sm:p-12 rounded-[2rem] shadow-sm border border-[#e8e4da]">
+            <div className="w-full max-w-2xl bg-yellow-100 p-8 sm:p-12 rounded-[2rem] shadow-sm border border-[#e8e4da]">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     
                     {/* 1. Car Name */}
@@ -57,7 +57,7 @@ export default function AddCarForm() {
                             name="carName"
                             value={formData.carName}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -69,7 +69,7 @@ export default function AddCarForm() {
                             name="dailyRentPrice"
                             value={formData.dailyRentPrice || ''}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -82,7 +82,7 @@ export default function AddCarForm() {
                             placeholder=""
                             value={formData.carType}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -94,7 +94,7 @@ export default function AddCarForm() {
                             name="imageUrl"
                             value={formData.imageUrl}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -106,7 +106,7 @@ export default function AddCarForm() {
                             name="seatCapacity"
                             value={formData.seatCapacity || ''}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -118,7 +118,7 @@ export default function AddCarForm() {
                             name="pickupLocation"
                             value={formData.pickupLocation}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -130,7 +130,7 @@ export default function AddCarForm() {
                             value={formData.description}
                             onChange={handleChange}
                             rows="4"
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm resize-none shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm resize-none shadow-inner"
                             required
                         ></textarea>
                     </div>
@@ -143,7 +143,7 @@ export default function AddCarForm() {
                             placeholder=""
                             value={formData.availabilityStatus}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-green-50 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
+                            className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
                             required
                         />
                     </div>
@@ -151,7 +151,7 @@ export default function AddCarForm() {
                     <div className="pt-4">
                         <button
                             type="submit"
-                            className="w-full bg-[#1a2b22] hover:bg-[#2d4a3e] text-[#c1f05d] font-bold py-3.5 px-4 rounded-xl shadow-md transition-all duration-300 text-sm tracking-wide uppercase cursor-pointer"
+                            className="w-full bg-[#c1f05d] hover:bg-[#b0dc4b] text-[#1c2e24] font-bold py-3.5 px-4 rounded-xl shadow-md transition-all duration-300 text-sm tracking-wide uppercase cursor-pointer"
                         >
                             Add Car
                         </button>

@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Banner() {
     return (
-        <section className="relative w-full bg-green-100 text-[#1c2e24] overflow-hidden py-16 sm:py-24 px-4 sm:px-6 lg:px-8 font-sans">
+        <section className="relative w-full bg-green-50 text-[#1c2e24] overflow-hidden py-16 sm:py-24 px-4 sm:px-6 lg:px-8 font-sans">
 
             
 
@@ -16,7 +16,7 @@ export default function Banner() {
 
                     <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-[#1c2e24] tracking-tight leading-[1.05]">
                         Rent <br />
-                        <span className="relative inline-block z-10">
+                        <span className="relative inline-block z-10 ">
                             sharper cars
                             <span className="absolute left-0 bottom-1 w-full h-3 bg-[#c1f05d] -z-10 opacity-90 rounded-sm" />
                         </span> <br />
