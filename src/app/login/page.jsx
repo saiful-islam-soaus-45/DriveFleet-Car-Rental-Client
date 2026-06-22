@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
 import { authClient } from '@/lib/auth-client'; // 👈 আপনার প্রজেক্টের সঠিক পাথ অনুযায়ী এটি পরিবর্তন করুন
+import { FcGoogle } from 'react-icons/fc';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -118,10 +119,12 @@ const LoginPage = () => {
                 <button
                     onClick={handleGoogleLogin}
                     type="button"
-                    className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 hover:bg-gray-50 text-slate-700 font-bold py-3.5 px-6 rounded-2xl text-sm transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-3 bg-white border border-gray-500 hover:bg-gray-50 text-slate-700 font-bold py-3.5 px-6 rounded-2xl text-sm transition-all cursor-pointer"
                 >
-                    <img src="https://docs.idfy.com/images/g-logo.png" alt="Google" className="w-5 h-5" />
+                    <span className="flex items-center gap-2">
+                    <FcGoogle className="w-5 h-5" />
                     Continue with Google
+                    </span>
                 </button>
 
                 <div className="text-center mt-8 pt-6 border-t border-gray-100">
