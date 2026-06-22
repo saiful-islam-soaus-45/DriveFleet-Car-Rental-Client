@@ -120,7 +120,7 @@ const MyAddedCarsPage = () => {
                 {/* কার লিস্টের প্রধান কন্টেইনার */}
                 {cars.length === 0 ? (
                     <div className="bg-white rounded-3xl p-12 text-center text-gray-400 font-bold shadow-sm">
-                        You haven't added any cars yet!
+                        You have not added any cars yet!
                     </div>
                 ) : (
                     <div className="space-y-4">

@@ -95,9 +95,9 @@ const Navbar = () => {
                                 <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">
                                     Login
                                 </Link>
-                                <Link href={"/login"}>
+                                <Link href={"/register"}>
                                     <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold lg:px-6 lg:py-2.5 px-4 py-2 rounded-full shadow-md shadow-blue-200 transition-all text-sm cursor-pointer">
-                                        Join Free
+                                        Register
                                     </button>
                                 </Link>
                             </div>
