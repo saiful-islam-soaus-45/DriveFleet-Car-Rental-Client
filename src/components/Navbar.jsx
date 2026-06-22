@@ -1,24 +1,21 @@
 "use client"
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { authClient } from '@/lib/auth-client'; // 👈 আপনার প্রজেক্টের সঠিক পাথ অনুযায়ী এটি চেক করে নিন
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনুর জন্য
     const [isDropdownOpen, setIsDropdownOpen] = useState(false); // প্রোফাইল ড্রপডাউনের জন্য
 
-    // 🌟 এখানে আপনার Auth সিস্টেমের ইউজার ডাটা বসবে (আপাতত টেস্ট করার জন্য একটি ডামি ইউজার দেওয়া হলো)
-    // লগআউট টেস্ট করতে চাইলে এটিকে null করে দিন: const user = null;
-    const [user, setUser] = useState({
-        name: "John Doe",
-        email: "john@example.com",
-        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop"
-    });
+    // 🌟 Better-Auth এর মাধ্যমে লাইভ সেশন ডাটা ট্র্যাক করা
+    const { data: session } = authClient.useSession();
+    const user = session?.user; // ইউজার থাকলে অবজেক্ট পাবেন, না থাকলে null
 
-    const handleLogout = () => {
-        // এখানে আপনার লগআউট লজিক বসবে
-        setUser(null);
+    const handleLogout = async () => {
+        await authClient.signOut();
         setIsDropdownOpen(false);
         setIsOpen(false);
+        window.location.reload(); // সেশন পুরোপুরি ক্লিয়ার করে পেজ রিফ্রেশ করার জন্য
     };
 
     return (
@@ -61,7 +58,7 @@ const Navbar = () => {
                                     className="flex items-center space-x-2 border border-gray-200 p-1.5 rounded-full hover:shadow-sm transition-all focus:outline-none cursor-pointer"
                                 >
                                     <img 
-                                        src={user.photo || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} 
+                                        src={user.image || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} 
                                         alt="Profile" 
                                         className="w-8 h-8 rounded-full object-cover"
                                     />
@@ -90,21 +87,14 @@ const Navbar = () => {
                                 )}
                             </div>
                         ) : (
-                            /* লগইন না থাকলে এই বাটন দেখাবে */
-                            <div className="flex items-center lg:space-x-6 space-x-4">
-                                <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">
-                                    Login
-                                </Link>
-                                <Link href={"/register"}>
-                                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold lg:px-6 lg:py-2.5 px-4 py-2 rounded-full shadow-md shadow-blue-200 transition-all text-sm cursor-pointer">
-                                        Register
-                                    </button>
-                                </Link>
-                            </div>
+                            /* 🌟 শুধুমাত্র 'Login' লেখাটি রাখা হয়েছে (Register বাটন সরানো হয়েছে) */
+                            <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-bold transition-colors text-sm lg:text-base mr-2">
+                                Login
+                            </Link>
                         )}
                     </div>
 
-                    {/* Mobile Menu Button (Visible only below md breakpoint) */}
+                    {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="md:hidden p-2 text-slate-700 hover:bg-slate-50 rounded-lg focus:outline-none cursor-pointer"
@@ -134,9 +124,8 @@ const Navbar = () => {
                         <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
                             {user ? (
                                 <>
-                                    {/* মোবাইল ভিউতে লগইন থাকলে প্রোফাইল ও অতিরিক্ত লিংকের সেট */}
                                     <div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-2xl mb-2">
-                                        <img src={user.photo || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                                        <img src={user.image || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
                                         <div className="truncate">
                                             <p className="text-sm font-bold text-slate-800">{user.name}</p>
                                             <p className="text-xs text-slate-400">{user.email}</p>
@@ -156,9 +145,9 @@ const Navbar = () => {
                                     <Link href="/login" onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-semibold text-sm text-center py-2">
                                         Login
                                     </Link>
-                                    <Link href="/login" onClick={() => setIsOpen(false)} className="w-full block">
+                                    <Link href="/register" onClick={() => setIsOpen(false)} className="w-full block">
                                         <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-full shadow-md text-sm cursor-pointer">
-                                            Join Free
+                                            Register
                                         </button>
                                     </Link>
                                 </>
