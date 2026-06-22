@@ -3,7 +3,23 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনুর জন্য
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false); // প্রোফাইল ড্রপডাউনের জন্য
+
+    // 🌟 এখানে আপনার Auth সিস্টেমের ইউজার ডাটা বসবে (আপাতত টেস্ট করার জন্য একটি ডামি ইউজার দেওয়া হলো)
+    // লগআউট টেস্ট করতে চাইলে এটিকে null করে দিন: const user = null;
+    const [user, setUser] = useState({
+        name: "John Doe",
+        email: "john@example.com",
+        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&fit=crop"
+    });
+
+    const handleLogout = () => {
+        // এখানে আপনার লগআউট লজিক বসবে
+        setUser(null);
+        setIsDropdownOpen(false);
+        setIsOpen(false);
+    };
 
     return (
         <nav className="bg-white border-b border-gray-100 shadow-sm px-4 sm:px-6 py-4 relative z-50">
@@ -11,9 +27,6 @@ const Navbar = () => {
 
                 {/* LEFT: Logo Section */}
                 <div className="flex items-center space-x-3 shrink-0">
-                    {/* Blue Book Icon */}
-
-                    {/* Logo Text */}
                     <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                         DriveFleet
                     </span>
@@ -31,34 +44,72 @@ const Navbar = () => {
                         <Link href={"/add-car"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Add Car</Link>
                     </li>
                     <li>
-                        <Link href={"/my-bookings"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">My Bookings
-                        </Link>
+                        <Link href={"/my-bookings"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">My Bookings</Link>
                     </li>
                 </ul>
 
-                {/* RIGHT: Actions & Mobile Toggle */}
-                <div className="flex items-center lg:space-x-6 space-x-3">
-                    {/* Action Links (Hidden on small mobile screens, visible on sm/md/lg) */}
-                    <div className="hidden sm:flex items-center lg:space-x-6 space-x-4">
-                        <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">
-                            Login
-                        </Link>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold lg:px-6 lg:py-2.5 px-4 py-2 rounded-full shadow-md shadow-blue-200 transition-all text-sm">
-                            Join Free
-                        </button>
+                {/* RIGHT: Actions & Dropdown / Login */}
+                <div className="flex items-center space-x-4">
+                    
+                    {/* Desktop View Action: Logged In vs Logged Out */}
+                    <div className="hidden md:block">
+                        {user ? (
+                            /* প্রোফাইল ড্রপডাউন কন্টেইনার */
+                            <div className="relative">
+                                <button 
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="flex items-center space-x-2 border border-gray-200 p-1.5 rounded-full hover:shadow-sm transition-all focus:outline-none cursor-pointer"
+                                >
+                                    <img 
+                                        src={user.photo || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} 
+                                        alt="Profile" 
+                                        className="w-8 h-8 rounded-full object-cover"
+                                    />
+                                    <svg className="w-4 h-4 text-slate-500 pr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </button>
+
+                                {/* ড্রপডাউন মেনু */}
+                                {isDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                                        <div className="px-4 py-2 border-b border-gray-50 mb-1">
+                                            <p className="text-sm font-bold text-slate-800 truncate">{user.name}</p>
+                                            <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                                        </div>
+                                        <Link href="/add-car" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium">Add Car</Link>
+                                        <Link href="/my-bookings" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium">My Bookings</Link>
+                                        <Link href="/my-added-cars" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium">My Added Cars</Link>
+                                        <button 
+                                            onClick={handleLogout}
+                                            className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-semibold border-t border-gray-50 mt-1 cursor-pointer"
+                                        >
+                                            Logout
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            /* লগইন না থাকলে এই বাটন দেখাবে */
+                            <div className="flex items-center lg:space-x-6 space-x-4">
+                                <Link href={"/login"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">
+                                    Login
+                                </Link>
+                                <Link href={"/login"}>
+                                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold lg:px-6 lg:py-2.5 px-4 py-2 rounded-full shadow-md shadow-blue-200 transition-all text-sm cursor-pointer">
+                                        Join Free
+                                    </button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button (Visible only below md breakpoint) */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="md:hidden p-2 text-slate-700 hover:bg-slate-50 rounded-lg focus:outline-none"
+                        className="md:hidden p-2 text-slate-700 hover:bg-slate-50 rounded-lg focus:outline-none cursor-pointer"
                     >
-                        <svg
-                            className="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             {isOpen ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             ) : (
@@ -70,40 +121,48 @@ const Navbar = () => {
 
             </div>
 
-            {/* MOBILE BREAKDOWN DRAWER (Toggled via State) */}
+            {/* MOBILE BREAKDOWN DRAWER */}
             {isOpen && (
                 <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg md:hidden transition-all duration-200 ease-in-out">
-                    <div className="px-4 pt-2 pb-6 space-y-3 flex flex-col">
-                        <li>
-                            <Link href={"/"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Home</Link>
-                        </li>
-                        <li>
-                            <Link href={"/explore-cars"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Explore Cars</Link>
-                        </li>
-                        <li>
-                            <Link href={"/add-car"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">Add Car</Link>
-                        </li>
-                        <li>
-                            <Link href={"/my-bookings"} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm lg:text-base">My Bookings
-                            </Link>
-                        </li>
+                    <div className="px-4 pt-2 pb-6 flex flex-col space-y-3">
+                        <Link href={"/"} onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm py-1">Home</Link>
+                        <Link href={"/explore-cars"} onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm py-1">Explore Cars</Link>
+                        <Link href={"/add-car"} onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm py-1">Add Car</Link>
+                        <Link href={"/my-bookings"} onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-medium transition-colors text-sm py-1">My Bookings</Link>
 
-                        {/* Action buttons inside mobile drawer (For screen sizes narrower than 'sm') */}
-                        <div className="pt-4 border-t border-[#e8e4da] sm:hidden flex flex-col space-y-3">
-                            {/* Login Link: টেক্সট সেন্টার করে থিম কালার দেওয়া হয়েছে */}
-                            <Link
-                                href="/login"
-                                className="text-[#415e51] hover:text-[#1c2e24] font-semibold transition-colors text-sm text-center py-2"
-                            >
-                                Login
-                            </Link>
-
-                            {/* Register Link & Button: Mossforge সিগনেচার লাইম কালার (#c1f05d) দেওয়া হলো যেন ব্যানার বাটনের সাথে মিলে যায় */}
-                            <Link href="/register" className="w-full block">
-                                <button className="w-full bg-[#c1f05d] hover:bg-[#b0df4c] text-[#1c2e24] font-bold py-2.5 rounded-full shadow-md transition-all duration-300 text-sm">
-                                    Join Free
-                                </button>
-                            </Link>
+                        {/* Mobile view and conditional actions */}
+                        <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
+                            {user ? (
+                                <>
+                                    {/* মোবাইল ভিউতে লগইন থাকলে প্রোফাইল ও অতিরিক্ত লিংকের সেট */}
+                                    <div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-2xl mb-2">
+                                        <img src={user.photo || "https://cdn-icons-png.flaticon.com/512/149/149071.png"} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                                        <div className="truncate">
+                                            <p className="text-sm font-bold text-slate-800">{user.name}</p>
+                                            <p className="text-xs text-slate-400">{user.email}</p>
+                                        </div>
+                                    </div>
+                                    <Link href="/my-added-cars" onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-medium text-sm py-1">My Added Cars</Link>
+                                    <button 
+                                        onClick={handleLogout}
+                                        className="w-full text-left text-red-600 font-semibold text-sm py-2 cursor-pointer"
+                                    >
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    {/* মোবাইল ভিউতে লগইন না থাকলে বাটন */}
+                                    <Link href="/login" onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-semibold text-sm text-center py-2">
+                                        Login
+                                    </Link>
+                                    <Link href="/login" onClick={() => setIsOpen(false)} className="w-full block">
+                                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-full shadow-md text-sm cursor-pointer">
+                                            Join Free
+                                        </button>
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
