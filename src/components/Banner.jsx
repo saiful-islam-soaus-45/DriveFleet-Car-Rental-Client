@@ -48,7 +48,7 @@ export default function Banner() {
 
                 <div className="flex justify-center md:justify-end w-full">
 
-                    <div className="relative w-full max-w-xl aspect-4/3   rounded-[2rem] shadow-2xl shadow-green-800">
+                    <div className="relative w-full max-w-xl aspect-4/3   rounded-[2rem] shadow-2xl shadow-[#c1f05d]">
 
                         
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import ExploreCarCard from './ExploreCarCard';
+import Link from 'next/link';
 
 const AvailableCar = async () => {
     // ব্যাকএন্ডের GET API থেকে সব ডাটা নিয়ে আসা
@@ -12,7 +13,7 @@ const AvailableCar = async () => {
     return (
         <div className="bg-[#f7f5f0] py-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                
+
                 {/* সেকশন হেডার এবং টাইটেল */}
                 <div className="mb-12 text-center sm:text-left flex flex-col sm:flex-row justify-between items-end gap-4">
                     <div>
@@ -23,17 +24,23 @@ const AvailableCar = async () => {
                             Available Vehicles
                         </h2>
                     </div>
-                    
-                    {/* See All Cars বাটন (যা মেইন এক্সপ্লোর পেজে নিয়ে যাবে) */}
-                    <a 
-                        href="/explore-cars" 
-                        className="inline-flex items-center gap-2 bg-[#1c2e24] hover:bg-black text-white font-bold text-xs uppercase tracking-wider py-3 px-6 rounded-xl shadow-md transition-all duration-300"
+
+                    <Link
+                        href="/explore-cars"
+                        className="group inline-flex items-center gap-2 bg-[#c1f05d] hover:bg-[#b0df4c] text-[#1c2e24] font-extrabold px-7 py-3.5 rounded-full transition-all duration-300 text-sm shadow-sm cursor-pointer"
                     >
-                        <span>See All Cars</span>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        See All Cars
+                        {/* ➡️ অ্যারো আইকন যা হোভার করলে ডানপাশে সরবে */}
+                        <svg
+                            className="w-4 h-4 transform group-hover:translate-x-1 transition-transform stroke-[2.5]"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
-                    </a>
+                    </Link>
+
                 </div>
 
                 {/* কার্ড গ্রিড লেআউট (এখানে সর্বোচ্চ ৬টি কার্ড রেন্ডার হবে) */}
@@ -41,8 +48,8 @@ const AvailableCar = async () => {
                     {
                         featuredCars.map((car) => (
                             <ExploreCarCard
-                                key={car._id} 
-                                car={car} 
+                                key={car._id}
+                                car={car}
                             />
                         ))
                     }

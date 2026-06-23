@@ -15,9 +15,9 @@ const DetailsPage = async ({ params }) => {
     const session = await auth.api.getSession({
         headers: await headers()
     });
-    
-    // সেশন থেকে আসল ইমেইলটি নেওয়া হলো
-    const userEmail = session?.user?.email; 
+
+    // সেশন থেকে আসল ইমেইলটি নেওয়া হলো
+    const userEmail = session?.user?.email;
 
     if (!car) {
         return (
@@ -35,7 +35,8 @@ const DetailsPage = async ({ params }) => {
         seatCapacity,
         pickupLocation,
         description,
-        availabilityStatus
+        availabilityStatus,
+        booking_count // 📊 ডাটাবেজ থেকে বুকিং কাউন্ট ফিল্ডটি নিয়ে আসা হলো
     } = car;
 
     return (
@@ -90,6 +91,24 @@ const DetailsPage = async ({ params }) => {
                                     {description || "Experience top-tier driving comfort and performance with our premium choice."}
                                 </p>
 
+                                {/* 📊 বুকিং কাউন্ট ডিসপ্লে ব্যাজ (ডিজাইন সামঞ্জস্য রেখে আপডেট করা হয়েছে) */}
+                                <div className="flex items-center gap-3 bg-[#f7f5f0] p-3 rounded-xl border border-gray-100 w-full sm:w-max mb-6">
+                                    {/* সাদা রঙের আইকন ব্যাকগ্রাউন্ড বক্স */}
+                                    <div className="bg-white p-2 rounded-lg shadow-sm text-gray-500">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        {/* ছোট সাব-টাইটেল */}
+                                        <p className="text-[10px] uppercase font-black tracking-wider text-gray-400">Popularity</p>
+                                        {/* মেইন কাউন্ট টেক্সট */}
+                                        <p className="text-xs sm:text-sm font-bold text-[#1c2e24]">
+                                            Booked by {booking_count || 0} users
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-2 gap-4 mb-8">
                                     <div className="flex items-center gap-3 bg-[#f7f5f0] p-3 rounded-xl border border-gray-100">
                                         <div className="bg-white p-2 rounded-lg shadow-sm text-gray-500">
@@ -119,6 +138,7 @@ const DetailsPage = async ({ params }) => {
                             </div>
 
                             {/* মডালে আসল ইমেইলটি চলে যাচ্ছে */}
+                            <button></button>
                             <BookingModal car={car} userEmail={userEmail} />
                         </div>
 
