@@ -1,9 +1,15 @@
 "use client"
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // ✅ রিডাইরেক্ট করার জন্য useRouter ইম্পোর্ট করা হলো
+import { authClient } from "@/lib/auth-client"; 
 
 const MyAddedCarsPage = () => {
+    const router = useRouter();
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Better-Auth হুক ব্যবহার করে সেশন এবং লোডিং স্টেট নেওয়া হচ্ছে
+    const { data: session, isPending: sessionLoading } = authClient.useSession();
 
     // মডাল স্টেটসমূহ
     const [isEditOpen, setIsEditOpen] = useState(false);
@@ -22,9 +28,16 @@ const MyAddedCarsPage = () => {
 
     // ডাটা লোড করার ফাংশন
     const fetchMyCars = async () => {
+        const userEmail = session?.user?.email;
+
+        if (!userEmail) {
+            setLoading(false);
+            return;
+        }
+
         try {
-            // আপাতত আপনার সব গাড়িই এখানে লোড হবে (অথেনটিকেশন থাকলে ইউজারের ইমেইল দিয়ে কুয়েরি করতে পারেন)
-            const res = await fetch('http://localhost:5000/explore-cars');
+            setLoading(true);
+            const res = await fetch(`http://localhost:5000/my-cars?email=${userEmail}`);
             if (res.ok) {
                 const data = await res.json();
                 setCars(data);
@@ -36,9 +49,18 @@ const MyAddedCarsPage = () => {
         }
     };
 
+    // ✅ সেশন চেক এবং ডাটা ফেচ করার লজিক ঠিক করা হলো
     useEffect(() => {
-        fetchMyCars();
-    }, []);
+        if (!sessionLoading) {
+            if (!session) {
+                // সেশন না থাকলে সরাসরি লগইন পেজে নিয়ে যাবে
+                router.push('/login'); 
+            } else {
+                // সেশন থাকলে ডাটা ফেচ করবে
+                fetchMyCars();
+            }
+        }
+    }, [session, sessionLoading, router]);
 
     // এডিট বাটন ক্লিক হ্যান্ডলার
     const openEditModal = (car) => {
@@ -66,7 +88,7 @@ const MyAddedCarsPage = () => {
 
             if (res.ok) {
                 setIsEditOpen(false);
-                fetchMyCars(); // পেজের ডাটা রিফ্রেশ করা
+                fetchMyCars(); 
             } else {
                 alert("Failed to update car info");
             }
@@ -90,7 +112,7 @@ const MyAddedCarsPage = () => {
 
             if (res.ok) {
                 setIsDeleteOpen(false);
-                fetchMyCars(); // পেজের ডাটা রিফ্রেশ করা
+                fetchMyCars(); 
             } else {
                 alert("Failed to delete car");
             }
@@ -99,8 +121,14 @@ const MyAddedCarsPage = () => {
         }
     };
 
-    if (loading) {
+    // ✅ শুধুমাত্র অথেনটিকেশন লোডিং অথবা ডাটা ফেচিং লোডিং এর সময় লোডার দেখাবে
+    if (sessionLoading || (loading && session)) {
         return <div className="min-h-screen flex items-center justify-center font-bold text-gray-500">Loading your fleet...</div>;
+    }
+
+    // ✅ সেশন না থাকলে বা লগআউট করলে কন্টেন্ট শো করবে না (সরাসরি রিডাইরেক্ট হতে সাহায্য করবে)
+    if (!session) {
+        return null;
     }
 
     return (
@@ -150,7 +178,7 @@ const MyAddedCarsPage = () => {
                                     </div>
                                 </div>
 
-                                {/* অ্যাকশন বাটনসমূহ (Edit এবং Delete) */}
+                                {/* অ্যাকশন বাটনসমূহ */}
                                 <div className="flex items-center gap-3">
                                     <button 
                                         onClick={() => openEditModal(car)}
@@ -171,17 +199,15 @@ const MyAddedCarsPage = () => {
                 )}
             </div>
 
-            {/* ------------------ ১ নম্বর স্ক্রিনশটের অবিকল EDIT MODAL ------------------ */}
+            {/* EDIT MODAL */}
             {isEditOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
                     <div className="bg-[#f7f5f0] w-full max-w-lg rounded-[2.5rem] p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
                         <div className="text-center mb-6">
                             <h2 className="text-4xl font-black text-[#1c2e24] tracking-tight">Update Car</h2>
-                            <p className="text-xs text-gray-400 font-bold mt-1">Owners can edit price, description, availability, image, type, and pickup location.</p>
                         </div>
 
                         <form onSubmit={handleEditSubmit} className="space-y-4">
-                            {/* Daily Rent Price */}
                             <div>
                                 <label className="block text-xs font-black text-[#1c2e24] mb-1 uppercase tracking-wider">Daily Rent Price</label>
                                 <input 
@@ -193,7 +219,6 @@ const MyAddedCarsPage = () => {
                                 />
                             </div>
 
-                            {/* Car Type Dropdown */}
                             <div>
                                 <label className="block text-xs font-black text-[#1c2e24] mb-1 uppercase tracking-wider">Car Type</label>
                                 <select 
@@ -208,7 +233,6 @@ const MyAddedCarsPage = () => {
                                 </select>
                             </div>
 
-                            {/* Image URL */}
                             <div>
                                 <label className="block text-xs font-black text-[#1c2e24] mb-1 uppercase tracking-wider">Image URL</label>
                                 <input 
@@ -219,7 +243,6 @@ const MyAddedCarsPage = () => {
                                 />
                             </div>
 
-                            {/* Pickup Location */}
                             <div>
                                 <label className="block text-xs font-black text-[#1c2e24] mb-1 uppercase tracking-wider">Pickup Location</label>
                                 <input 
@@ -230,7 +253,6 @@ const MyAddedCarsPage = () => {
                                 />
                             </div>
 
-                            {/* Description */}
                             <div>
                                 <label className="block text-xs font-black text-[#1c2e24] mb-1 uppercase tracking-wider">Description</label>
                                 <textarea 
@@ -241,7 +263,6 @@ const MyAddedCarsPage = () => {
                                 ></textarea>
                             </div>
 
-                            {/* Availability Status */}
                             <div>
                                 <label className="block text-xs font-black text-[#1c2e24] mb-1 uppercase tracking-wider">Availability Status</label>
                                 <select 
@@ -254,7 +275,6 @@ const MyAddedCarsPage = () => {
                                 </select>
                             </div>
 
-                            {/* Action Buttons */}
                             <div className="flex justify-end gap-3 pt-4">
                                 <button 
                                     type="button" 
@@ -275,17 +295,14 @@ const MyAddedCarsPage = () => {
                 </div>
             )}
 
-            {/* ------------------ ২ নম্বর স্ক্রিনশটের অবিকল DELETE CONFIRM MODAL ------------------ */}
+            {/* DELETE CONFIRM MODAL */}
             {isDeleteOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm">
                     <div className="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-center">
-                        <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">
-                            Delete listing?
-                        </h3>
+                        <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">Delete listing?</h3>
                         <p className="text-xs text-gray-400 font-semibold px-4 mb-6 leading-relaxed">
-                            This removes the car from your listings and the marketplace. This action cannot be undone.
+                            This removes the car from your listings and the marketplace.
                         </p>
-                        
                         <div className="flex items-center justify-center gap-3">
                             <button 
                                 onClick={() => setIsDeleteOpen(false)}

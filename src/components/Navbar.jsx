@@ -77,12 +77,14 @@ const Navbar = () => {
                                         <Link href="/add-car" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium">Add Car</Link>
                                         <Link href="/my-bookings" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium">My Bookings</Link>
                                         <Link href="/my-added-cars" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 font-medium">My Added Cars</Link>
+                                        <Link href="/login">
                                         <button 
                                             onClick={handleLogout}
                                             className="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-semibold border-t border-gray-50 mt-1 cursor-pointer"
                                         >
                                             Logout
                                         </button>
+                                        </Link>
                                     </div>
                                 )}
                             </div>
@@ -132,12 +134,14 @@ const Navbar = () => {
                                         </div>
                                     </div>
                                     <Link href="/my-added-cars" onClick={() => setIsOpen(false)} className="text-slate-700 hover:text-blue-600 font-medium text-sm py-1">My Added Cars</Link>
+                                    <Link href="/login">
                                     <button 
                                         onClick={handleLogout}
                                         className="w-full text-left text-red-600 font-semibold text-sm py-2 cursor-pointer"
                                     >
                                         Logout
                                     </button>
+                                    </Link>
                                 </>
                             ) : (
                                 <>

@@ -1,5 +1,6 @@
-
 import BookingModal from '@/components/BookingModal';
+import { auth } from "@/lib/auth"; // 👈 আপনার প্রজেক্টের Better-Auth কনফিগ ফাইলের সঠিক পাথ দিন
+import { headers } from "next/headers";
 import Link from 'next/link';
 import React from 'react';
 
@@ -9,6 +10,14 @@ const DetailsPage = async ({ params }) => {
     // ব্যাকএন্ড থেকে নির্দিষ্ট আইডির ডাটা ফেচ করা
     const res = await fetch(`http://localhost:5000/explore-cars/${id}`, { cache: 'no-store' });
     const car = await res.json();
+
+    // 🔒 Better-Auth সেশন থেকে কারেন্ট লগইন থাকা ইউজারের ডাটা আনা
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+    
+    // সেশন থেকে আসল ইমেইলটি নেওয়া হলো
+    const userEmail = session?.user?.email; 
 
     if (!car) {
         return (
@@ -33,10 +42,6 @@ const DetailsPage = async ({ params }) => {
         <div className="min-h-screen bg-[#f7f5f0] py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
             <div className="max-w-5xl w-full">
 
-
-                {/* <a >
-                    
-                </a> */}
                 <Link href="/explore-cars" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#1c2e24] opacity-60 hover:opacity-100 transition-opacity mb-6">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
@@ -45,18 +50,15 @@ const DetailsPage = async ({ params }) => {
                 </Link>
 
                 <div className="relative p-[2px] rounded-[2.5rem] bg-gradient-to-br from-[#c1f05d] via-[#d4f77a] to-[#c1f05d] shadow-[0_0_40px_rgba(193,240,93,0.45)]">
-
-                    {/* কার্ডের ভেতরের কন্টেন্ট গ্রিড (মোবাইলে ১ কলাম, ল্যাপটপে ২ কলাম) */}
                     <div className="bg-white rounded-[2.4rem] p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
-                        {/* বাম কলাম: বড় ইমেজ */}
+                        {/* বাম কলাম: বড় ইমেজ */}
                         <div className="relative w-full h-72 sm:h-96 lg:h-[400px] rounded-[2rem] overflow-hidden bg-gray-100 shadow-inner">
                             <img
                                 src={imageUrl || "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf"}
                                 alt={carName}
                                 className="w-full h-full object-cover"
                             />
-                            {/* Availability Badge */}
                             {availabilityStatus && (
                                 <span className="absolute top-4 left-4 bg-[#c1f05d] text-[#1c2e24] text-xs font-black uppercase px-4 py-1.5 rounded-full tracking-wider shadow-md">
                                     {availabilityStatus}
@@ -67,18 +69,15 @@ const DetailsPage = async ({ params }) => {
                         {/* ডান কলাম: ইনফরমেশন টেক্সট */}
                         <div className="flex flex-col justify-between h-full py-2">
                             <div>
-                                {/* কার ক্যাটাগরি */}
                                 <span className="text-xs font-black tracking-widest text-[#82ab24] uppercase">
                                     {carType || 'Premium Vehicle'}
                                 </span>
 
-                                {/* কার এর নাম ও প্রাইস */}
                                 <div className="flex flex-wrap justify-between items-start gap-4 mt-2 mb-6">
                                     <h1 className="text-3xl sm:text-4xl font-black text-[#1c2e24] tracking-tight leading-tight">
                                         {carName}
                                     </h1>
 
-                                    {/* হাইলাইটেড প্রাইস ট্যাগ */}
                                     <div className="bg-[#c1f05d] text-[#1c2e24] px-5 py-3 rounded-2xl text-center shadow-md flex flex-col justify-center items-center min-w-[90px]">
                                         <span className="text-2xl font-black">${dailyRentPrice}</span>
                                         <span className="text-[10px] opacity-75 font-bold -mt-1">per day</span>
@@ -87,14 +86,11 @@ const DetailsPage = async ({ params }) => {
 
                                 <hr className="border-gray-100 my-4" />
 
-                                {/* ডেসক্রিপশন */}
                                 <p className="text-sm sm:text-base text-gray-600 font-medium leading-relaxed mb-6">
-                                    {description || "Experience top-tier driving comfort and performance with our premium choice. Perfect for city tours, business trips, or long weekend getaways. Fully cleaned and inspected before every trip."}
+                                    {description || "Experience top-tier driving comfort and performance with our premium choice."}
                                 </p>
 
-                                {/* কার ফিচার ইনফো গ্রিড */}
                                 <div className="grid grid-cols-2 gap-4 mb-8">
-                                    {/* লোকেশন বক্স */}
                                     <div className="flex items-center gap-3 bg-[#f7f5f0] p-3 rounded-xl border border-gray-100">
                                         <div className="bg-white p-2 rounded-lg shadow-sm text-gray-500">
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -108,7 +104,6 @@ const DetailsPage = async ({ params }) => {
                                         </div>
                                     </div>
 
-                                    {/* সিট ক্যাপাসিটি বক্স */}
                                     <div className="flex items-center gap-3 bg-[#f7f5f0] p-3 rounded-xl border border-gray-100">
                                         <div className="bg-white p-2 rounded-lg shadow-sm text-gray-500">
                                             <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -123,8 +118,8 @@ const DetailsPage = async ({ params }) => {
                                 </div>
                             </div>
 
-                            {/* বুকিং বাটন */}
-                            <BookingModal car={car} />
+                            {/* মডালে আসল ইমেইলটি চলে যাচ্ছে */}
+                            <BookingModal car={car} userEmail={userEmail} />
                         </div>
 
                     </div>

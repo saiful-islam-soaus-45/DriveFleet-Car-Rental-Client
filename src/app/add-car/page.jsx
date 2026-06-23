@@ -1,8 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+// ✅ Better-Auth সেশন হুক ব্যবহারের জন্য authClient ইম্পোর্ট করা হলো
+import { authClient } from "@/lib/auth-client"; 
 
 export default function AddCarForm() {
+    // 👤 লগইন করা ইউজারের সেশন ডাটা নেওয়া হচ্ছে
+    const { data: session } = authClient.useSession();
+
     const [formData, setFormData] = useState({
         carName: '',
         dailyRentPrice: '',
@@ -25,18 +30,54 @@ export default function AddCarForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Car Form Data:', formData);
 
-      const res = await  fetch('http://localhost:5000/add-car', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        
-        })
-        const data = await res.json();
-        console.log(data);
+        // 🚨 সেশন থেকে ইমেইল চেক করা হচ্ছে
+        const userEmail = session?.user?.email;
+
+        if (!userEmail) {
+            alert("Please log in first before adding a car!");
+            return;
+        }
+
+        // 🔄 সাবমিট করার অবজেক্টের সাথে ইউজারের email যুক্ত করা হচ্ছে
+        const submissionData = {
+            ...formData,
+            email: userEmail 
+        };
+
+        console.log('Car Form Data with Email:', submissionData);
+
+        try {
+            const res = await fetch('http://localhost:5000/add-car', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(submissionData) // ✅ নতুন ডাটা পাঠানো হচ্ছে
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data);
+                alert("Car added successfully!");
+                
+                // 🧹 ফর্ম রিসেট করা হচ্ছে (ঐচ্ছিক)
+                setFormData({
+                    carName: '',
+                    dailyRentPrice: '',
+                    carType: '',
+                    imageUrl: '',
+                    seatCapacity: '',
+                    pickupLocation: '',
+                    description: '',
+                    availabilityStatus: ''
+                });
+            } else {
+                alert("Failed to add car data.");
+            }
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
     };
 
     return (
@@ -62,6 +103,7 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* 2. Daily Rent Price */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Daily Rent Price</label>
                         <input
@@ -74,12 +116,12 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* 3. Car Type */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Car Type (e.g., SUV, Sedan, Luxury)</label>
                         <input
                             type="text"
                             name="carType"
-                            placeholder=""
                             value={formData.carType}
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
@@ -87,6 +129,7 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* 4. Image URL */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Image URL (imgbb/postimage)</label>
                         <input
@@ -99,6 +142,7 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* 5. Seat Capacity */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Seat Capacity</label>
                         <input
@@ -111,6 +155,7 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* 6. Pickup Location */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Pickup Location</label>
                         <input
@@ -123,6 +168,7 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* 7. Description */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Description</label>
                         <textarea
@@ -135,12 +181,12 @@ export default function AddCarForm() {
                         ></textarea>
                     </div>
 
+                    {/* 8. Availability Status */}
                     <div className="flex flex-col space-y-2">
                         <label className="text-sm font-extrabold text-[#1c2e24] tracking-tight">Availability Status (e.g., Available, Unavailable)</label>
                         <input
                             type="text"
                             name="availabilityStatus"
-                            placeholder=""
                             value={formData.availabilityStatus}
                             onChange={handleChange}
                             className="w-full px-4 py-3 rounded-xl bg-green-100 border border-[#e8e4da] focus:border-[#1c2e24] focus:bg-white text-[#1c2e24] font-bold outline-none transition-all text-sm shadow-inner"
@@ -148,6 +194,7 @@ export default function AddCarForm() {
                         />
                     </div>
 
+                    {/* Submit Button */}
                     <div className="pt-4">
                         <button
                             type="submit"

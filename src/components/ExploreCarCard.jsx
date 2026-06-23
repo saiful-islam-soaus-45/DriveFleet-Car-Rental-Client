@@ -10,7 +10,6 @@ const ExploreCarCard = ({ car }) => {
         imageUrl, 
         seatCapacity, 
         pickupLocation, 
-        description, 
         availabilityStatus 
     } = car;
 

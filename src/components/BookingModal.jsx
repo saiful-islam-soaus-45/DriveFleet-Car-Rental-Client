@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const BookingModal = ({ car }) => {
+const BookingModal = ({ car, userEmail }) => { // 👈 প্রপস হিসেবে userEmail রিসিভ করা হলো
     const [isOpen, setIsOpen] = useState(false);
     const [driverNeeded, setDriverNeeded] = useState("Yes");
     const [specialNote, setSpecialNote] = useState("No Need");
@@ -21,7 +21,8 @@ const BookingModal = ({ car }) => {
             pickupLocation: car.pickupLocation || "Uttara, Dhaka",
             driverNeeded: driverNeeded,
             specialNote: specialNote,
-            bookedAt: new Date().toLocaleString(), // বর্তমান টাইমস্ট্যাম্প
+            bookedAt: new Date().toLocaleString(),
+            email: userEmail, // 👈 ব্যাকএন্ডের রিকোয়ারমেন্ট অনুযায়ী ইউজারের ইমেইল যোগ করা হলো
         };
 
         try {
@@ -33,13 +34,13 @@ const BookingModal = ({ car }) => {
 
             if (res.ok) {
                 setIsOpen(false);
-                router.push('/my-bookings'); // সরাসরি মাই বুকিং রাউটে নিয়ে যাবে
+                router.push('/my-bookings'); 
                 router.refresh();
             }
         } catch (error) {
             console.error("Booking error:", error);
         } finally {
-            setLoading(false);
+            setLoading(false); // 👈 এখানে ভুলটি সংশোধন করা হয়েছে (loading থেকে setLoading করা হলো)
         }
     };
 
@@ -59,7 +60,6 @@ const BookingModal = ({ car }) => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
 
-                    {/* মডাল বডি - স্ক্রিনশটের অবিকল ডিজাইন */}
                     <div className="relative bg-white w-full max-w-md rounded-[2rem] p-8 shadow-2xl z-10 font-sans">
                         <button 
                             onClick={() => setIsOpen(false)}
@@ -78,7 +78,6 @@ const BookingModal = ({ car }) => {
                         </div>
 
                         <form onSubmit={handleConfirmBooking} className="mt-6 space-y-5">
-                            {/* Driver Needed Dropdown */}
                             <div>
                                 <label className="block text-xs font-black text-gray-800 mb-1.5">Driver Needed</label>
                                 <select 
@@ -91,7 +90,6 @@ const BookingModal = ({ car }) => {
                                 </select>
                             </div>
 
-                            {/* Special Note Textarea */}
                             <div>
                                 <label className="block text-xs font-black text-gray-800 mb-1.5">Special Note</label>
                                 <textarea 
