@@ -25,7 +25,8 @@ const Navbar = () => {
     const isActive = (path) => pathname === path;
 
     return (
-        <nav className="bg-white border-b border-gray-100 shadow-sm px-4 sm:px-6 py-4 relative z-50">
+        /* 📌 এখানে 'sticky top-0' এবং ব্যাকগ্রাউন্ড ব্লার এফেক্ট (backdrop-blur-md) যুক্ত করা হয়েছে */
+        <nav className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm px-4 sm:px-6 py-4 relative z-50">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
 
                 {/* 🚗 LEFT: Logo Section with Custom Lime Green Shadow (#c1f05d) */}
@@ -113,7 +114,7 @@ const Navbar = () => {
                         onClick={() => setIsOpen(!isOpen)}
                         className="md:hidden p-2 text-[#2d4a3e] hover:bg-slate-50 rounded-lg focus:outline-none cursor-pointer"
                     >
-                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24 " stroke="currentColor">
                             {isOpen ? (
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             ) : (
@@ -127,6 +128,7 @@ const Navbar = () => {
 
             {/* MOBILE BREAKDOWN DRAWER */}
             {isOpen && (
+                /* 📌 স্ক্রল করার সময় কন্টেন্ট যাতে নিচে দিয়ে দেখা না যায়, তাই ড্রয়ারের ব্যাকগ্রাউন্ড 'bg-white' ই রাখা হলো */
                 <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg md:hidden transition-all duration-200 ease-in-out">
                     <div className="px-4 pt-2 pb-6 flex flex-col space-y-3">
                         {[
@@ -136,7 +138,6 @@ const Navbar = () => {
                             { name: 'My Bookings', href: '/my-bookings' }
                         ].map((link) => (
                             <div key={link.href} className="relative pl-2 py-1">
-                                {/* 🎯 মোবাইল ভিউতে অ্যাক্টিভ রুটের বাম পাশে একটি ছোট ইন্ডিকেটর বার */}
                                 {isActive(link.href) && (
                                     <div className="absolute left-0 top-1 bottom-1 w-[4px] bg-[#c1f05d] rounded-full" />
                                 )}

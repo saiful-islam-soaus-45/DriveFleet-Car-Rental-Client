@@ -147,7 +147,7 @@ const RegisterPage = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#1c2e24] hover:bg-black text-white font-black py-4 px-6 rounded-2xl text-sm transition-all shadow-md cursor-pointer tracking-wide disabled:bg-gray-400"
+                            className="w-full bg-[#c1f05d] hover:bg-[#aee33d] text-[#2d4a3e]  font-black py-4 px-6 rounded-2xl text-sm transition-all shadow-md cursor-pointer tracking-wide disabled:bg-gray-400"
                         >
                             {loading ? "Registering..." : "Register Button"}
                         </button>

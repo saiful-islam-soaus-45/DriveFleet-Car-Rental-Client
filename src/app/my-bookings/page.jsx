@@ -11,13 +11,21 @@ const MyBookingsPage = async () => {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
+    const {token} = await auth.api.getToken({
+            headers: await headers()
+        })
     const userEmail = session?.user?.email;
 
     // ২. ইমেইল থাকলেই কেবল ব্যাকএন্ডে রিকোয়েস্ট যাবে
     if (userEmail) {
         try {
             // 🌟 কুয়েরি প্যারামিটার হিসেবে ইমেইল পাঠানো হচ্ছে
-            const res = await fetch(`http://localhost:5000/bookings?email=${userEmail}`, { cache: 'no-store' });
+            const res = await fetch(`http://localhost:5000/bookings?email=${userEmail}`,
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`
+                    }
+                }, { cache: 'no-store' });
             if (res.ok) {
                 bookings = await res.json();
             }

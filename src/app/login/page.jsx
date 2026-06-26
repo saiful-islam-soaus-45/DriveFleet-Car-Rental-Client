@@ -1,9 +1,9 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-import { authClient } from '@/lib/auth-client'; // 👈 আপনার প্রজেক্টের সঠিক পাথ অনুযায়ী এটি পরিবর্তন করুন
+import { authClient } from '@/lib/auth-client'; 
 import { FcGoogle } from 'react-icons/fc';
 
 const LoginPage = () => {
@@ -11,6 +11,23 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+
+    // গুগল লগইন করে এই পেজে ব্যাক করার পর টোস্ট দেখানোর লজিক
+    useEffect(() => {
+        const isGoogleLogin = localStorage.getItem('google_login_pending');
+        if (isGoogleLogin) {
+            // ১. সফলতার টোস্ট দেখানো
+            toast.success("Login Successful!");
+            // ২. লোকাল স্টোরেজ ক্লিন করা
+            localStorage.removeItem('google_login_pending');
+            
+            // ৩. অল্প কিছু সময় পর হোম পেজে রিডাইরেক্ট করা (যেন টোস্টটা ইউজার দেখতে পায়)
+            setTimeout(() => {
+                router.push('/');
+                router.refresh();
+            }, 1200); 
+        }
+    }, [router]);
 
     // Better-Auth Email & Password Login
     const handleLogin = async (e) => {
@@ -21,7 +38,7 @@ const LoginPage = () => {
             const { data, error } = await authClient.signIn.email({
                 email: email,
                 password: password,
-                callbackURL: '/' // লগইন সফল হলে স্বয়ংক্রিয়ভাবে হোমে যাওয়ার জন্য
+                callbackURL: '/' 
             });
 
             if (error) {
@@ -29,7 +46,7 @@ const LoginPage = () => {
             }
 
             toast.success("Login Successful!");
-            router.push('/'); // হোম রুটে রিডাইরেক্ট
+            router.push('/'); 
             router.refresh();
         } catch (error) {
             toast.error(error.message || "Login Failed! Please try again.");
@@ -41,12 +58,15 @@ const LoginPage = () => {
     // Better-Auth Google Login
     const handleGoogleLogin = async () => {
         try {
+            // গুগলে যাওয়ার আগে লোকাল স্টোরেজে একটি ফ্ল্যাগ সেট করে রাখা হচ্ছে
+            localStorage.setItem('google_login_pending', 'true');
+
             await authClient.signIn.social({
                 provider: 'google',
-                callbackURL: '/' // গুগল লগইন সফল হলে হোম রুটে রিডাইরেক্ট করবে
+                callbackURL: '/login' // 👈 লগইন সফল হলে প্রথমে এই পেজেই ফিরে আসবে টোস্ট দেখানোর জন্য
             });
-            toast.success("Redirecting to Google...");
         } catch (error) {
+            localStorage.removeItem('google_login_pending');
             toast.error("Google Login Failed!");
         }
     };
@@ -73,8 +93,8 @@ const LoginPage = () => {
                         </label>
                         <input
                             type="email"
-                            name="email" // 👈 ব্রাউজারের ডেটা ট্র্যাকিংয়ের জন্য name প্রয়োজন
-                            autoComplete="email" // 👈 এটি থাকলে ইমেইল লিস্ট সাজেস্ট করবে
+                            name="email" 
+                            autoComplete="email" 
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="example@mail.com"
@@ -89,8 +109,8 @@ const LoginPage = () => {
                         </label>
                         <input
                             type="password"
-                            name="password" // 👈 পাসওয়ার্ড চেনার জন্য
-                            autoComplete="current-password" // 👈 লগইন পেজ হলে current-password দিবেন, আর রেজিস্ট্রেশন পেজ হলে new-password দিবেন
+                            name="password" 
+                            autoComplete="current-password" 
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
@@ -103,7 +123,7 @@ const LoginPage = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#1c2e24] hover:bg-black text-white font-black py-4 px-6 rounded-2xl text-sm transition-all shadow-md cursor-pointer tracking-wide disabled:bg-gray-400"
+                            className="w-full bg-[#c1f05d] hover:bg-[#aee33d] text-[#2d4a3e] font-black py-4 px-6 rounded-2xl text-sm transition-all shadow-md cursor-pointer tracking-wide disabled:bg-gray-400"
                         >
                             {loading ? "Logging in..." : "Login"}
                         </button>
@@ -122,8 +142,8 @@ const LoginPage = () => {
                     className="w-full flex items-center justify-center gap-3 bg-white border border-gray-500 hover:bg-gray-50 text-slate-700 font-bold py-3.5 px-6 rounded-2xl text-sm transition-all cursor-pointer"
                 >
                     <span className="flex items-center gap-2">
-                    <FcGoogle className="w-5 h-5" />
-                    Continue with Google
+                        <FcGoogle className="w-5 h-5" />
+                        Continue with Google
                     </span>
                 </button>
 

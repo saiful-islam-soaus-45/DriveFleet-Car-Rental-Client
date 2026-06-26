@@ -6,9 +6,18 @@ import React from 'react';
 
 const DetailsPage = async ({ params }) => {
     const { id } = await params;
+    const {token} = await auth.api.getToken({
+        headers: await headers()
+    })
+    console.log(token);
 
     // ব্যাকএন্ড থেকে নির্দিষ্ট আইডির ডাটা ফেচ করা
-    const res = await fetch(`http://localhost:5000/explore-cars/${id}`, { cache: 'no-store' });
+    const res = await fetch(`http://localhost:5000/explore-cars/${id}`, {
+        cache: 'no-store', // 👈 এখানে একটি কমা হবে
+        headers: {
+            authorization: `Bearer ${token}`
+        }
+    });
     const car = await res.json();
 
     // 🔒 Better-Auth সেশন থেকে কারেন্ট লগইন থাকা ইউজারের ডাটা আনা
