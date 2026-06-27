@@ -17,10 +17,10 @@ const MyAddedCarsPage = () => {
     const [editLoading, setEditLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    // 🛠️ ডাটাবেজের স্কিমা অনুযায়ী carType বদলে vehicleType করা হলো
+    // 🛠️ ডাটাবেজের স্কিমা অনুযায়ী carType বদলে carType করা হলো
     const [editForm, setEditForm] = useState({
         dailyRentPrice: '',
-        vehicleType: 'SUV', 
+        carType: 'SUV', 
         imageUrl: '',
         pickupLocation: '',
         description: '',
@@ -30,7 +30,7 @@ const MyAddedCarsPage = () => {
     const clearFormValues = () => {
         setEditForm({
             dailyRentPrice: '',
-            vehicleType: 'SUV',
+            carType: 'SUV',
             imageUrl: '',
             pickupLocation: '',
             description: '',
@@ -75,7 +75,7 @@ const MyAddedCarsPage = () => {
         setSelectedCar(car); 
         setEditForm({
             dailyRentPrice: car.dailyRentPrice || '',
-            vehicleType: car.vehicleType || 'SUV', 
+            carType: car.carType || 'SUV', 
             imageUrl: car.imageUrl || '',
             pickupLocation: car.pickupLocation || '',
             description: car.description || '',
@@ -253,10 +253,10 @@ const MyAddedCarsPage = () => {
 
                                 <div className="flex flex-col space-y-1.5">
                                     <label className="block text-xs font-black text-[#1c2e24] uppercase tracking-wider">Car Type</label>
-                                    {/* 🛠️ carType এর বদলে vehicleType হ্যান্ডেল করা হয়েছে */}
+                                    {/* 🛠️ carType এর বদলে carType হ্যান্ডেল করা হয়েছে */}
                                     <select 
-                                        value={editForm.vehicleType}
-                                        onChange={(e) => setEditForm({...editForm, vehicleType: e.target.value})}
+                                        value={editForm.carType}
+                                        onChange={(e) => setEditForm({...editForm, carType: e.target.value})}
                                         className="w-full bg-[#f7f5f0] border border-gray-100 focus:border-[#c1f05d] focus:bg-white rounded-xl p-3.5 text-sm font-bold text-[#1c2e24] outline-none transition-all cursor-pointer"
                                     >
                                         <option value="SUV">SUV</option>
