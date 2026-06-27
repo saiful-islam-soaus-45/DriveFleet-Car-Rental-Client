@@ -1,5 +1,5 @@
 import BookingModal from '@/components/BookingModal';
-import { auth } from "@/lib/auth"; // 👈 আপনার প্রজেক্টের Better-Auth কনফিগ ফাইলের সঠিক পাথ দিন
+import { auth } from "@/lib/auth"; 
 import { headers } from "next/headers";
 import Link from 'next/link';
 import React from 'react';
@@ -11,21 +11,18 @@ const DetailsPage = async ({ params }) => {
     })
     console.log(token);
 
-    // ব্যাকএন্ড থেকে নির্দিষ্ট আইডির ডাটা ফেচ করা
-    const res = await fetch(`http://localhost:5000/explore-cars/${id}`, {
-        cache: 'no-store', // 👈 এখানে একটি কমা হবে
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore-cars/${id}`, {
+        cache: 'no-store', 
         headers: {
             authorization: `Bearer ${token}`
         }
     });
     const car = await res.json();
 
-    // 🔒 Better-Auth সেশন থেকে কারেন্ট লগইন থাকা ইউজারের ডাটা আনা
     const session = await auth.api.getSession({
         headers: await headers()
     });
 
-    // সেশন থেকে আসল ইমেইলটি নেওয়া হলো
     const userEmail = session?.user?.email;
 
     if (!car) {
@@ -45,7 +42,7 @@ const DetailsPage = async ({ params }) => {
         pickupLocation,
         description,
         availabilityStatus,
-        booking_count // 📊 ডাটাবেজ থেকে বুকিং কাউন্ট ফিল্ডটি নিয়ে আসা হলো
+        booking_count 
     } = car;
 
     return (
@@ -76,7 +73,6 @@ const DetailsPage = async ({ params }) => {
                             )}
                         </div>
 
-                        {/* ডান কলাম: ইনফরমেশন টেক্সট */}
                         <div className="flex flex-col justify-between h-full py-2">
                             <div>
                                 <span className="text-xs font-black tracking-widest text-[#82ab24] uppercase">
@@ -100,18 +96,16 @@ const DetailsPage = async ({ params }) => {
                                     {description || "Experience top-tier driving comfort and performance with our premium choice."}
                                 </p>
 
-                                {/* 📊 বুকিং কাউন্ট ডিসপ্লে ব্যাজ (ডিজাইন সামঞ্জস্য রেখে আপডেট করা হয়েছে) */}
                                 <div className="flex items-center gap-3 bg-[#f7f5f0] p-3 rounded-xl border border-gray-100 w-full sm:w-max mb-6">
-                                    {/* সাদা রঙের আইকন ব্যাকগ্রাউন্ড বক্স */}
+
                                     <div className="bg-white p-2 rounded-lg shadow-sm text-gray-500">
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        {/* ছোট সাব-টাইটেল */}
                                         <p className="text-[10px] uppercase font-black tracking-wider text-gray-400">Popularity</p>
-                                        {/* মেইন কাউন্ট টেক্সট */}
+
                                         <p className="text-xs sm:text-sm font-bold text-[#1c2e24]">
                                             Booked by {booking_count || 0} users
                                         </p>
@@ -146,7 +140,6 @@ const DetailsPage = async ({ params }) => {
                                 </div>
                             </div>
 
-                            {/* মডালে আসল ইমেইলটি চলে যাচ্ছে */}
                             <button></button>
                             <BookingModal car={car} userEmail={userEmail} />
                         </div>

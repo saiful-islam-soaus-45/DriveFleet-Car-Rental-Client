@@ -1,16 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-// ✅ Better-Auth সেশন হুক ব্যবহারের জন্য authClient ইম্পোর্ট করা হলো
+
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from 'next/navigation'; // রিডাইরেক্ট করার জন্য useRouter আনা হলো
+import { useRouter } from 'next/navigation'; 
 
 export default function AddCarForm() {
-    // 👤 লগইন করা ইউজারের সেশন ডাটা নেওয়া হচ্ছে
     const { data: session } = authClient.useSession();
     const router = useRouter();
 
-    // 🔄 বাটনে স্পিনার দেখানোর জন্য লোডিং স্টেট
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -36,7 +34,6 @@ export default function AddCarForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 🚨 সেশন থেকে ইমেইল চেক করা হচ্ছে
         const userEmail = session?.user?.email;
 
         if (!userEmail) {
@@ -46,7 +43,6 @@ export default function AddCarForm() {
 
         setLoading(true);
 
-        // 🔄 সাবমিট করার অবজেক্টের সাথে ইউজারের email এবং ডিফল্ট booking_count যুক্ত করা হচ্ছে
         const submissionData = {
             ...formData,
             email: userEmail,
@@ -56,7 +52,7 @@ export default function AddCarForm() {
         try {
             const { data: tokenData } = await authClient.token()
 
-            const res = await fetch('http://localhost:5000/add-car', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/add-car`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +63,6 @@ export default function AddCarForm() {
             });
 
             if (res.ok) {
-                // 🧹 ফর্ম রিসেট করা হচ্ছে
                 setFormData({
                     carName: '',
                     dailyRentPrice: '',
@@ -79,7 +74,6 @@ export default function AddCarForm() {
                     availabilityStatus: ''
                 });
 
-                // 🚀 সফলভাবে অ্যাড হওয়ার পর '/my-added-cars' পেজে নিয়ে যাওয়া হচ্ছে
                 router.push('/my-added-cars');
                 router.refresh();
             } else {

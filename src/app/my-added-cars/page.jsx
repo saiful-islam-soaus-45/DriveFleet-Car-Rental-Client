@@ -8,33 +8,29 @@ const MyAddedCarsPage = () => {
     const [cars, setCars] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Better-Auth সেশন হুক
     const { data: session, isPending: sessionLoading } = authClient.useSession();
 
-    // মডাল স্টেটসমূহ
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
 
-    // মডালের জন্য লোডিং স্টেটসমূহ
     const [editLoading, setEditLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
-    // এডিট ফর্ম স্টেট (ইনপুট প্রাথমিকভাবে খালি থাকবে)
+    // 🛠️ ডাটাবেজের স্কিমা অনুযায়ী carType বদলে vehicleType করা হলো
     const [editForm, setEditForm] = useState({
         dailyRentPrice: '',
-        carType: 'SUV',
+        vehicleType: 'SUV', 
         imageUrl: '',
         pickupLocation: '',
         description: '',
         availabilityStatus: 'Available'
     });
 
-    // ফর্ম রিসেট করার ফাংশন
     const clearFormValues = () => {
         setEditForm({
             dailyRentPrice: '',
-            carType: 'SUV',
+            vehicleType: 'SUV',
             imageUrl: '',
             pickupLocation: '',
             description: '',
@@ -43,7 +39,6 @@ const MyAddedCarsPage = () => {
         setSelectedCar(null);
     };
 
-    // ডাটা লোড করার ফাংশন
     const fetchMyCars = async () => {
         const userEmail = session?.user?.email;
 
@@ -54,7 +49,7 @@ const MyAddedCarsPage = () => {
 
         try {
             setLoading(true);
-            const res = await fetch(`http://localhost:5000/my-cars?email=${userEmail}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-cars?email=${userEmail}`);
             if (res.ok) {
                 const data = await res.json();
                 setCars(data);
@@ -66,7 +61,6 @@ const MyAddedCarsPage = () => {
         }
     };
 
-    // সেশন চেক এবং ডাটা ফেচ লজিক
     useEffect(() => {
         if (!sessionLoading) {
             if (!session) {
@@ -77,44 +71,41 @@ const MyAddedCarsPage = () => {
         }
     }, [session, sessionLoading, router]);
 
-    // 🔄 এডিট বাটন ক্লিক হ্যান্ডলার (এখানে আগের ডাটা ইনপুটে বসানো হবে না, খালি রাখা হবে)
     const openEditModal = (car) => {
-        setSelectedCar(car); // ব্যাকএন্ডে PUT রিকোয়েস্ট পাঠানোর জন্য আইডি ট্র্যাক রাখতে হবে
+        setSelectedCar(car); 
         setEditForm({
-            dailyRentPrice: '',
-            carType: 'SUV',
-            imageUrl: '',
-            pickupLocation: '',
-            description: '',
-            availabilityStatus: 'Available'
+            dailyRentPrice: car.dailyRentPrice || '',
+            vehicleType: car.vehicleType || 'SUV', 
+            imageUrl: car.imageUrl || '',
+            pickupLocation: car.pickupLocation || '',
+            description: car.description || '',
+            availabilityStatus: car.availabilityStatus || 'Available'
         });
         setIsEditOpen(true);
     };
 
-    // মডাল ম্যানুয়ালি ক্লোজ করার হ্যান্ডলার
     const closeEditModal = () => {
         setIsEditOpen(false);
         clearFormValues();
     };
 
-    // এডিট সাবমিট হ্যান্ডলার
     const handleEditSubmit = async (e) => {
         e.preventDefault();
         setEditLoading(true); 
         try {
-            const {data:tokenData} = await authClient.token()
-            const res = await fetch(`http://localhost:5000/explore-cars/${selectedCar._id}`, {
+            const { data: tokenData } = await authClient.token();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore-cars/${selectedCar._id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json',
+                headers: { 
+                    'Content-Type': 'application/json',
                     authorization: `Bearer ${tokenData?.token}`
-                 },
-                 
+                },
                 body: JSON.stringify(editForm)
             });
 
             if (res.ok) {
                 setIsEditOpen(false);
-                clearFormValues(); // সফল সাবমিট শেষে ফর্ম আবার খালি হবে
+                clearFormValues(); 
                 fetchMyCars(); 
             } else {
                 alert("Failed to update car info");
@@ -126,22 +117,21 @@ const MyAddedCarsPage = () => {
         }
     };
 
-    // ডিলিট বাটন ক্লিক হ্যান্ডলার
     const openDeleteModal = (car) => {
         setSelectedCar(car);
         setIsDeleteOpen(true);
     };
 
-    // ডিলিট কনফার্ম হ্যান্ডলার
     const handleDeleteConfirm = async () => {
         setDeleteLoading(true); 
         try {
-            const {data:tokenData} = await authClient.token()
-            const res = await fetch(`http://localhost:5000/explore-cars/${selectedCar._id}`, {
+            const { data: tokenData } = await authClient.token();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/explore-cars/${selectedCar._id}`, {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json',
+                headers: { 
+                    'Content-Type': 'application/json',
                     authorization: `Bearer ${tokenData?.token}`
-                 },
+                },
             });
 
             if (res.ok) {
@@ -158,7 +148,6 @@ const MyAddedCarsPage = () => {
         }
     };
 
-    // লোডার ভিউ
     if (sessionLoading || (loading && session)) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center font-black text-[#1c2e24] bg-[#f7f5f0] gap-3">
@@ -179,7 +168,6 @@ const MyAddedCarsPage = () => {
         <div className="min-h-screen bg-[#f7f5f0] py-28 px-4 sm:px-8">
             <div className="max-w-4xl mx-auto">
                 
-                {/* হেডার সেকশন */}
                 <div className="mb-8 text-center sm:text-left">
                     <span className="text-[10px] font-black tracking-widest text-[#82ab24] uppercase">
                         Manage Fleet
@@ -189,7 +177,6 @@ const MyAddedCarsPage = () => {
                     </h1>
                 </div>
 
-                {/* কার লিস্টের প্রধান কন্টেইনার */}
                 {cars.length === 0 ? (
                     <div className="bg-white rounded-[2rem] p-12 text-center text-gray-400 font-bold shadow-sm border border-gray-100">
                         You have not added any cars yet!
@@ -204,12 +191,13 @@ const MyAddedCarsPage = () => {
                                 <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto">
                                     <img 
                                         src={car.imageUrl || "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf"} 
-                                        alt={car.carName} 
+                                        alt={car.carModel} 
                                         className="w-full sm:w-36 h-24 object-cover rounded-2xl bg-gray-50"
                                     />
                                     <div className="text-center sm:text-left">
+                                        {/* 🛠️ car.carName পরিবর্তন করে car.carModel করা হলো */}
                                         <h3 className="text-xl font-black text-[#1c2e24] tracking-tight">
-                                            {car.carName}
+                                            {car.carModel}
                                         </h3>
                                         <div className="flex flex-col gap-1 mt-1.5 text-gray-400 font-bold text-[11px]">
                                             <span className="flex items-center justify-center sm:justify-start gap-1">
@@ -222,7 +210,6 @@ const MyAddedCarsPage = () => {
                                     </div>
                                 </div>
 
-                                {/* অ্যাকশন বাটনসমূহ */}
                                 <div className="flex items-center gap-3">
                                     <button 
                                         onClick={() => openEditModal(car)}
@@ -243,7 +230,7 @@ const MyAddedCarsPage = () => {
                 )}
             </div>
 
-            {/* EDIT MODAL */}
+            {/* Edit Modal */}
             {isEditOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
                     <div className="w-full max-w-lg relative p-[2px] rounded-[2.5rem] bg-gradient-to-br from-[#c1f05d] via-[#d4f77a] to-[#c1f05d] shadow-[0_0_40px_rgba(193,240,93,0.35)] max-h-[90vh] overflow-y-auto">
@@ -266,15 +253,16 @@ const MyAddedCarsPage = () => {
 
                                 <div className="flex flex-col space-y-1.5">
                                     <label className="block text-xs font-black text-[#1c2e24] uppercase tracking-wider">Car Type</label>
+                                    {/* 🛠️ carType এর বদলে vehicleType হ্যান্ডেল করা হয়েছে */}
                                     <select 
-                                        value={editForm.carType}
-                                        onChange={(e) => setEditForm({...editForm, carType: e.target.value})}
+                                        value={editForm.vehicleType}
+                                        onChange={(e) => setEditForm({...editForm, vehicleType: e.target.value})}
                                         className="w-full bg-[#f7f5f0] border border-gray-100 focus:border-[#c1f05d] focus:bg-white rounded-xl p-3.5 text-sm font-bold text-[#1c2e24] outline-none transition-all cursor-pointer"
                                     >
                                         <option value="SUV">SUV</option>
                                         <option value="Sedan">Sedan</option>
-                                        <option value="Hatchback">Hatchback</option>
-                                        <option value="Crossover">Crossover</option>
+                                        <option value="Luxury">Luxury</option>
+                                        <option value="Electric">Electric</option>
                                     </select>
                                 </div>
 
@@ -352,7 +340,7 @@ const MyAddedCarsPage = () => {
                 </div>
             )}
 
-            {/* DELETE CONFIRM MODAL */}
+            {/* Delete Modal */}
             {isDeleteOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
                     <div className="w-full max-w-sm relative p-[2px] rounded-[2.5rem] bg-gradient-to-br from-red-400 via-rose-300 to-red-400 shadow-[0_0_40px_rgba(225,29,72,0.25)]">

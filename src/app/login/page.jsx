@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-import { authClient } from '@/lib/auth-client'; 
+import { authClient } from '@/lib/auth-client';
 import { FcGoogle } from 'react-icons/fc';
 
 const LoginPage = () => {
@@ -12,24 +12,21 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    // গুগল লগইন করে এই পেজে ব্যাক করার পর টোস্ট দেখানোর লজিক
     useEffect(() => {
         const isGoogleLogin = localStorage.getItem('google_login_pending');
         if (isGoogleLogin) {
-            // ১. সফলতার টোস্ট দেখানো
+
             toast.success("Login Successful!");
-            // ২. লোকাল স্টোরেজ ক্লিন করা
+
             localStorage.removeItem('google_login_pending');
-            
-            // ৩. অল্প কিছু সময় পর হোম পেজে রিডাইরেক্ট করা (যেন টোস্টটা ইউজার দেখতে পায়)
+
             setTimeout(() => {
                 router.push('/');
                 router.refresh();
-            }, 1200); 
+            }, 1200);
         }
     }, [router]);
 
-    // Better-Auth Email & Password Login
     const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -38,7 +35,7 @@ const LoginPage = () => {
             const { data, error } = await authClient.signIn.email({
                 email: email,
                 password: password,
-                callbackURL: '/' 
+                callbackURL: '/'
             });
 
             if (error) {
@@ -46,7 +43,7 @@ const LoginPage = () => {
             }
 
             toast.success("Login Successful!");
-            router.push('/'); 
+            router.push('/');
             router.refresh();
         } catch (error) {
             toast.error(error.message || "Login Failed! Please try again.");
@@ -58,12 +55,11 @@ const LoginPage = () => {
     // Better-Auth Google Login
     const handleGoogleLogin = async () => {
         try {
-            // গুগলে যাওয়ার আগে লোকাল স্টোরেজে একটি ফ্ল্যাগ সেট করে রাখা হচ্ছে
             localStorage.setItem('google_login_pending', 'true');
 
             await authClient.signIn.social({
                 provider: 'google',
-                callbackURL: '/login' // 👈 লগইন সফল হলে প্রথমে এই পেজেই ফিরে আসবে টোস্ট দেখানোর জন্য
+                callbackURL: '/login'
             });
         } catch (error) {
             localStorage.removeItem('google_login_pending');
@@ -93,8 +89,8 @@ const LoginPage = () => {
                         </label>
                         <input
                             type="email"
-                            name="email" 
-                            autoComplete="email" 
+                            name="email"
+                            autoComplete="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="example@mail.com"
@@ -109,8 +105,8 @@ const LoginPage = () => {
                         </label>
                         <input
                             type="password"
-                            name="password" 
-                            autoComplete="current-password" 
+                            name="password"
+                            autoComplete="current-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
@@ -149,8 +145,11 @@ const LoginPage = () => {
 
                 <div className="text-center mt-8 pt-6 border-t border-gray-100">
                     <p className="text-xs font-semibold text-gray-400">
-                        Don't have an account?{' '}
-                        <Link href="/register" className="text-[#82ab24] font-black hover:underline ml-1">
+                        Don&apos;t have an account?{" "}
+                        <Link
+                            href="/register"
+                            className="text-[#82ab24] font-black hover:underline ml-1"
+                        >
                             Register here
                         </Link>
                     </p>

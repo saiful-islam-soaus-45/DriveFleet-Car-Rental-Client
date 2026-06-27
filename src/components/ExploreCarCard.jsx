@@ -1,4 +1,5 @@
-"use client" // লোডিং স্টেট এবং হ্যান্ডলার ব্যবহারের জন্য ইউজার ক্লায়েন্ট ডিক্লেয়ার করা হলো
+"use client"
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
@@ -14,25 +15,22 @@ const ExploreCarCard = ({ car }) => {
         availabilityStatus
     } = car;
 
-    // ক্লিক করার পর লোডিং ট্র্যাক করার জন্য স্টেট
     const [isLoading, setIsLoading] = useState(false);
 
     return (
-        /* শ্যাডোর পরিমাণ (Spread ও Blur) বাড়ানো হলো এবং বর্ডারে শুধু #c1f05d এর হালকা শেড রাখা হলো */
-        <div className="relative p-[2px] rounded-[2rem] bg-gradient-to-br from-[#c1f05d] via-[#d4f77a] to-[#c1f05d] shadow-[0_0_35px_rgba(193,240,93,0.55)] hover:shadow-[0_0_50px_rgba(193,240,93,0.85)] transition-all duration-500 group flex flex-col justify-between">
 
-            {/* মেইনカード কন্টেন্ট এরিয়া */}
+        <div className="relative p-0.5 rounded-[2rem] bg-linear-to-br from-[#c1f05d] via-[#d4f77a] to-[#c1f05d] shadow-[0_0_35px_rgba(193,240,93,0.55)] hover:shadow-[0_0_50px_rgba(193,240,93,0.85)] transition-all duration-500 group flex flex-col justify-between">
+
             <div className="bg-white rounded-[1.9rem] p-4 w-full h-full flex flex-col justify-between">
 
-                {/* ইমেজ এবং অ্যাভেইলেবিলিটি ব্যাজ */}
                 <div className="relative w-full h-48 rounded-[1.5rem] overflow-hidden bg-gray-100">
                     <img
                         src={imageUrl || "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf"}
                         alt={carName}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
+                    
 
-                    {/* Available Badge */}
                     {availabilityStatus && (
                         <span className="absolute top-3 left-3 bg-[#c1f05d] text-[#1c2e24] text-[10px] font-black uppercase px-3 py-1 rounded-full tracking-wider shadow-sm">
                             {availabilityStatus}
@@ -40,10 +38,8 @@ const ExploreCarCard = ({ car }) => {
                     )}
                 </div>
 
-                {/* কার্ডের কন্টেন্ট এরিয়া */}
-                <div className="mt-4 px-2 flex-grow flex flex-col justify-between">
+                <div className="mt-4 px-2 grow flex flex-col justify-between">
 
-                    {/* টাইপ, নাম এবং প্রাইস সেকশন */}
                     <div>
                         <div className="flex justify-between items-start gap-2">
                             <div>
@@ -55,17 +51,14 @@ const ExploreCarCard = ({ car }) => {
                                 </h3>
                             </div>
 
-                            {/* প্রাইস বক্স */}
-                            <div className="bg-[#c1f05d] text-[#1c2e24] px-3 py-2 rounded-xl text-center min-w-[65px] flex flex-col justify-center items-center shadow-sm">
+                            <div className="bg-[#c1f05d] text-[#1c2e24] px-3 py-2 rounded-xl text-center min-w-16.25 flex flex-col justify-center items-center shadow-sm">
                                 <span className="text-base font-black">${dailyRentPrice}</span>
                                 <span className="text-[8px] opacity-60 font-medium -mt-1">per day</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* লোকেশন, সিট এবং বাটন সেকশন */}
                     <div className="mt-5 space-y-4">
-                        {/* আইকন ইনফো */}
                         <div className="space-y-1.5 text-xs text-gray-500 font-bold">
                             <div className="flex items-center gap-2">
                                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -82,20 +75,18 @@ const ExploreCarCard = ({ car }) => {
                             </div>
                         </div>
 
-                        {/* View Details Button */}
                         <Link href={`/explore-cars/${_id}`} onClick={() => setIsLoading(true)}>
-                            <button 
+                            <button
                                 disabled={isLoading}
                                 className="w-full bg-[#c1f05d] hover:bg-[#b0dc4b] disabled:bg-[#d9f893] disabled:cursor-not-allowed text-[#1c2e24] font-black py-3 px-4 rounded-xl shadow-md transition-all duration-300 text-xs tracking-wider uppercase cursor-pointer flex items-center justify-center gap-2"
                             >
-                                {/* 🔄 লোডিং ট্রু হলে এই স্পিনারটি দেখাবে */}
                                 {isLoading && (
                                     <svg className="animate-spin h-4 w-4 text-[#1c2e24]" fill="none" viewBox="0 0 24 24">
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                                     </svg>
                                 )}
-                                
+
                                 {isLoading ? 'Loading...' : 'View Details'}
                             </button>
                         </Link>

@@ -20,7 +20,7 @@ const MyBookingsPage = async () => {
     if (userEmail) {
         try {
             // 🌟 কুয়েরি প্যারামিটার হিসেবে ইমেইল পাঠানো হচ্ছে
-            const res = await fetch(`http://localhost:5000/bookings?email=${userEmail}`,
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings?email=${userEmail}`,
                 {
                     headers: {
                         authorization: `Bearer ${token}`

@@ -1,35 +1,31 @@
 "use client"
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // অ্যাক্টিভ রুট ট্র্যাক করার জন্য হুক
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 
 const Navbar = () => {
-    const pathname = usePathname(); // বর্তমান পেজের পাথনেম (যেমন: '/', '/explore-cars')
-    const [isOpen, setIsOpen] = useState(false); // মোবাইল মেনুর জন্য
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false); // প্রোফাইল ড্রপডাউনের জন্য
-    const [imageError, setImageError] = useState(false); // ইমেজ এরর ট্র্যাক করার জন্য
+    const pathname = usePathname();
+    const [isOpen, setIsOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
-    // Better-Auth এর মাধ্যমে লাইভ সেশন ডাটা ট্র্যাক করা
     const { data: session } = authClient.useSession();
-    const user = session?.user; // ইউজার থাকলে অবজেক্ট পাবেন, না থাকলে null
+    const user = session?.user;
 
     const handleLogout = async () => {
         await authClient.signOut();
         setIsDropdownOpen(false);
         setIsOpen(false);
-        window.location.reload(); // সেশন পুরোপুরি ক্লিয়ার করে পেজ রিফ্রেশ করার জন্য
+        window.location.reload();
     };
 
-    // অ্যাক্টিভ রুট চেক করার ফাংশন
     const isActive = (path) => pathname === path;
 
     return (
-        /* 📌 এখানে 'sticky top-0' এবং ব্যাকগ্রাউন্ড ব্লার এফেক্ট (backdrop-blur-md) যুক্ত করা হয়েছে */
-        <nav className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm px-4 sm:px-6 py-4 relative z-50">
+        <nav className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm px-4 sm:px-6 py-4  z-50">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
 
-                {/* 🚗 LEFT: Logo Section with Custom Lime Green Shadow (#c1f05d) */}
                 <Link href="/" className="flex items-center space-x-2 shrink-0 group focus:outline-none">
                     <div className="bg-[#c1f05d] p-2 rounded-xl shadow-[0_0_15px_rgba(193,240,93,0.6)] group-hover:shadow-[0_0_20px_rgba(193,240,93,0.9)] transition-all duration-300">
                         <svg className="w-5 h-5 text-[#2d4a3e]" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -41,7 +37,6 @@ const Navbar = () => {
                     </span>
                 </Link>
 
-                {/* CENTER: Navigation Links (Desktop) */}
                 <ul className="hidden md:flex lg:space-x-8 md:space-x-5 items-center">
                     {[
                         { name: 'Home', href: '/' },
@@ -50,13 +45,13 @@ const Navbar = () => {
                         { name: 'My Bookings', href: '/my-bookings' }
                     ].map((link) => (
                         <li key={link.href} className="relative py-2">
-                            <Link 
-                                href={link.href} 
+                            <Link
+                                href={link.href}
                                 className="text-[#2d4a3e] font-bold text-sm lg:text-base transition-colors duration-200"
                             >
                                 {link.name}
                             </Link>
-                            {/* 🎯 অ্যাক্টিভ রুটের নিচে ইন্ডিকেটর বার */}
+
                             {isActive(link.href) && (
                                 <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#c1f05d] rounded-full animate-in fade-in zoom-in-95 duration-300" />
                             )}
@@ -64,10 +59,8 @@ const Navbar = () => {
                     ))}
                 </ul>
 
-                {/* RIGHT: Actions & Dropdown / Login */}
                 <div className="flex items-center space-x-4">
 
-                    {/* Desktop View Action */}
                     <div className="hidden md:block">
                         {user ? (
                             <div className="relative">
@@ -109,7 +102,7 @@ const Navbar = () => {
                         )}
                     </div>
 
-                    {/* Mobile Menu Button */}
+
                     <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="md:hidden p-2 text-[#2d4a3e] hover:bg-slate-50 rounded-lg focus:outline-none cursor-pointer"
@@ -126,9 +119,8 @@ const Navbar = () => {
 
             </div>
 
-            {/* MOBILE BREAKDOWN DRAWER */}
             {isOpen && (
-                /* 📌 স্ক্রল করার সময় কন্টেন্ট যাতে নিচে দিয়ে দেখা না যায়, তাই ড্রয়ারের ব্যাকগ্রাউন্ড 'bg-white' ই রাখা হলো */
+
                 <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg md:hidden transition-all duration-200 ease-in-out">
                     <div className="px-4 pt-2 pb-6 flex flex-col space-y-3">
                         {[
@@ -141,9 +133,9 @@ const Navbar = () => {
                                 {isActive(link.href) && (
                                     <div className="absolute left-0 top-1 bottom-1 w-[4px] bg-[#c1f05d] rounded-full" />
                                 )}
-                                <Link 
-                                    href={link.href} 
-                                    onClick={() => setIsOpen(false)} 
+                                <Link
+                                    href={link.href}
+                                    onClick={() => setIsOpen(false)}
                                     className={`font-bold text-sm block ${isActive(link.href) ? 'text-[#2d4a3e]' : 'text-slate-600'}`}
                                 >
                                     {link.name}
@@ -151,7 +143,6 @@ const Navbar = () => {
                             </div>
                         ))}
 
-                        {/* Mobile view and conditional actions */}
                         <div className="pt-4 border-t border-gray-100 flex flex-col space-y-3">
                             {user ? (
                                 <>

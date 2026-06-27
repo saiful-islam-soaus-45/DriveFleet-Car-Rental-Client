@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 
-const BookingModal = ({ car, userEmail }) => { // 👈 প্রপস হিসেবে userEmail রিসিভ করা হলো
+const BookingModal = ({ car, userEmail }) => { 
     const [isOpen, setIsOpen] = useState(false);
     const [driverNeeded, setDriverNeeded] = useState("Yes");
     const [specialNote, setSpecialNote] = useState("");
@@ -23,13 +23,13 @@ const BookingModal = ({ car, userEmail }) => { // 👈 প্রপস হিস
             driverNeeded: driverNeeded,
             specialNote: specialNote,
             bookedAt: new Date().toLocaleString(),
-            email: userEmail, // 👈 ব্যাকএন্ডের রিকোয়ারমেন্ট অনুযায়ী ইউজারের ইমেইল যোগ করা হলো
+            email: userEmail, 
         };
 
         try {
 
             const {data:tokenData} = await authClient.token()
-            const res = await fetch('http://localhost:5000/bookings', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/bookings`, {
                 method: 'POST',
                 headers: {
                      'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const BookingModal = ({ car, userEmail }) => { // 👈 প্রপস হিস
         } catch (error) {
             console.error("Booking error:", error);
         } finally {
-            setLoading(false); // 👈 এখানে ভুলটি সংশোধন করা হয়েছে (loading থেকে setLoading করা হলো)
+            setLoading(false); 
         }
     };
 

@@ -3,7 +3,7 @@ import React from 'react';
 import Marquee from "react-fast-marquee";
 
 const CarBrandsMarquee = () => {
-    // অরিজিনাল ব্র্যান্ড লোগো এবং রেগুলার ফন্ট স্টাইল (ক্লিন ও রিয়ালিস্টিক কালার)
+
     const brands = [
         { 
             name: 'Toyota', 
@@ -81,11 +81,10 @@ const CarBrandsMarquee = () => {
     ];
 
     return (
-        <section className="bg-white py-24 overflow-hidden">
-            {/* কন্টেইনারের সাইজ max-w-7xl দিয়ে আরও বড় করা হয়েছে */}
+        <section className="bg-[#f7f5f0] py-24 overflow-hidden">
+
             <div className="max-w-7xl mx-auto px-6 sm:px-12 text-center">
                 
-                {/* হেডিং সেকশন */}
                 <div className="mb-16">
                     <span className="text-xs font-black tracking-widest text-[#82ab24] uppercase block mb-3">
                         Global Fleet Selection
@@ -95,32 +94,26 @@ const CarBrandsMarquee = () => {
                     </h2>
                 </div>
 
-                {/* মার্কি র্যাপার - প্যাডিং বাড়িয়ে এরিয়া বড় করা হয়েছে এবং কন্টাক্ট ব্যাকগ্রাউন্ড ক্লিন করা হয়েছে */}
                 <div className="relative w-full border-y border-gray-200/60 py-10 bg-[#f7f5f0]/30 rounded-[2rem]">
                     
-                    {/* সাইডের ফেড ইফেক্ট */}
-                    <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none hidden sm:block"></div>
-                    <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none hidden sm:block"></div>
+                    <div className="absolute inset-y-0 left-0 w-24 bg-linear-to-r from-white to-transparent z-10 pointer-events-none hidden sm:block"></div>
+                    <div className="absolute inset-y-0 right-0 w-24 bg-linear-to-l from-white to-transparent z-10 pointer-events-none hidden sm:block"></div>
 
-                    {/* react-fast-marquee */}
                     <Marquee 
                         speed={60} 
                         pauseOnHover={true} 
                         gradient={false}
                     >
-                        {/* গ্যাপ বাড়িয়ে এলিমেন্টগুলোকে বড় স্পেস দেওয়া হয়েছে */}
                         <div className="flex items-center gap-24 pr-24">
                             {brands.map((brand, index) => (
                                 <div 
                                     key={index} 
                                     className="flex items-center gap-4 text-[#1c2e24] select-none pointer-events-none"
                                 >
-                                    {/* অরিজিনাল কালার ব্র্যান্ড লোগো */}
                                     <div className="flex items-center justify-center">
                                         {brand.logo}
                                     </div>
                                     
-                                    {/* ব্র্যান্ড নেম - নট ইটালিক (সোজা ফন্ট) এবং ডিপ ডার্ক গ্রিন */}
                                     <span className="text-2xl font-black tracking-tight uppercase">
                                         {brand.name}
                                     </span>
